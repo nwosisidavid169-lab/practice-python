@@ -1,62 +1,68 @@
 import argparse
 
+parser = argparse.ArgumentParser(description="Clean a file")
 
-# Create a command-line argument parser
-parser = argparse.ArgumentParser(
-    description="Clean a file"
-)
-
-# Tell the program which input and output files to use
 parser.add_argument("-i", "--input", required=True)
 parser.add_argument("-o", "--output", required=True)
 
-# Read the arguments supplied in the terminal
 args = parser.parse_args()
 
 
+# General file cleaner
 def clean_line(line):
-    """
-    Clean a line by removing extra spaces
-    and capitalizing each word.
-    """
     return " ".join(line.split()).title()
 
 
-# Open the input file and read all its lines
-with open(args.input, "r") as f:
-    lines = f.readlines()
+# Email file cleaner
+def clean_email(line):
+    return " ".join(line.split()).lower()
 
 
-# Keep track of names we have already seen
+# Ask the user which cleaner to use
+print("Choose a cleaner:")
+print("1. General File Cleaner")
+print("2. Email File Cleaner")
+
+choice = input("Enter your choice: ")
+
+
+# Read the input file
+with open(args.input, "r") as file:
+    lines = file.readlines()
+
+
 seen = []
-
-# Store the final cleaned lines
 clean = []
 
 
-# Process each line in the input file
+# Clean each line
 for line in lines:
-    line = clean_line(line)
+
+    if choice == "1":
+        line = clean_line(line)
+
+    elif choice == "2":
+        line = clean_email(line)
+
+    else:
+        print("Invalid choice.")
+        exit()
 
     # Skip empty lines
     if line == "":
         continue
 
-    # Skip duplicate lines
+    # Skip duplicates
     if line in seen:
         continue
 
-    # Remember this line so duplicates can be detected
     seen.append(line)
-
-    # Add the cleaned line to the final list
     clean.append(line + "\n")
 
 
-# Open the output file and write the cleaned lines
-with open(args.output, "w") as f:
-    f.writelines(clean)
+# Write the cleaned file
+with open(args.output, "w") as file:
+    file.writelines(clean)
 
 
-# Show the cleaning result
 print(f"Cleaned {len(lines)} lines down to {len(clean)}.")
