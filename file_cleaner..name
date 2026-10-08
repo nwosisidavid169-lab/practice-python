@@ -65,4 +65,4 @@ with open(args.output, "w") as file:
     file.writelines(clean)
 
 
-print(f"Cleaned {len(lines)} lines down to {len(clean)}.")
+print(f"Cleaned {len(lines)} lines down to {len(clean)}...")
